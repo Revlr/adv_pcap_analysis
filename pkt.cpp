@@ -20,7 +20,7 @@ bool Pkt::isIp(){
 bool Pkt::isTcp(){
     if(isIp()){
         if(iphdr->ip_p == IPPROTO_TCP){
-            this->tcphdr = reinterpret_cast<struct libnet_tcp_hdr *>(pkt + ETH_HDR_LEN + 4*(iphdr->ip_hl));
+            this->tcphdr = reinterpret_cast<struct libnet_tcp_hdr *>(reinterpret_cast<uint64_t>(iphdr) + 4*(iphdr->ip_hl));
             return true;
         }
     }
@@ -56,14 +56,9 @@ void Pkt::printTcp(uint16_t tcp){
 }
 
 void Pkt::printTcpData(){
-    int offset = ETH_HDR_LEN+(iphdr->ip_hl*4)+(tcphdr->th_off*4);
     int len = ntohs(iphdr->ip_len)-(iphdr->ip_hl*4)-(tcphdr->th_off*4);
-    const u_char* data = pkt + offset;
+    u_char* data = reinterpret_cast<u_char*>(reinterpret_cast<uint64_t>(tcphdr)+(tcphdr->th_off)*4);
     printf("http data: ");
-    if(len < 16){
-        printf("%.*s\n", len, data);
-    }else{
-        printf("%.*s\n", 16, data);
-    }
-
+    if(len < 16) printf("%.*s\n", len, data);
+    else printf("%.*s\n", 16, data);
 }
