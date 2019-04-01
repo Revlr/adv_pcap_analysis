@@ -60,7 +60,6 @@ void Pkt::printTcpData(){
     int len = ntohs(iphdr->ip_len)-(iphdr->ip_hl*4)-(tcphdr->th_off*4);
     const u_char* data = pkt + offset;
     printf("http data: ");
-    int i;
     if(len < 16){
         printf("%.*s\n", len, data);
     }else{
