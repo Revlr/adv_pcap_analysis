@@ -63,7 +63,7 @@ void Pkt::printTcpData(){
     if(len < 16){
         printf("%.*s\n", len, data);
     }else{
-        printf("%16s\n", data);
+        printf("%.*s\n", 16, data);
     }
 
 }
